@@ -125,3 +125,35 @@ def myModel():
 # Create and compile the model
 model = myModel()
 print(model.summary())
+
+batchSizeVal = 50
+epochsVal = 10
+stepsPerEpochVal = 2000
+
+history = model.fit(dataGen.flow(X_train,y_train,
+                                 batch_size=batchSizeVal),
+                                steps_per_epoch=stepsPerEpochVal,
+                                epochs=epochsVal,
+                                validation_data=(X_validation, y_validation),
+                                shuffle=1)
+
+plt.figure(1)
+plt.plot(history.history['loss'])
+plt.plot(history.history['val_loss'])
+plt.legend(['training','validation'])
+plt.title('Loss')
+plt.xlabel('epoch')
+
+
+plt.figure(2)
+plt.plot(history.history['accuracy'])
+plt.plot(history.history['val_accuracy'])
+plt.legend(['training','validation'])
+plt.title('Accuracy')
+plt.xlabel('epoch')
+
+plt.show()
+
+score = model.evaluate(X_test,y_test,verbose=0)
+print('Test Score = ',score[0])
+print('Test Accurancy = ',score[1])

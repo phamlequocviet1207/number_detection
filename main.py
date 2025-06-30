@@ -9,12 +9,17 @@ from tensorflow.keras.utils import to_categorical
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Conv2D, MaxPooling2D, Flatten, Dense, Dropout
 from tensorflow.keras.optimizers import Adam
-
+import pickle
 ################
 path = 'myData'
 sizeImg = (32, 32)
 testRatio = 0.2
 valRatio = 0.2
+
+batchSizeVal = 50
+epochsVal = 2
+stepsPerEpochVal = 2000
+
 ################
 
 images = []
@@ -126,10 +131,6 @@ def myModel():
 model = myModel()
 print(model.summary())
 
-batchSizeVal = 50
-epochsVal = 10
-stepsPerEpochVal = 2000
-
 history = model.fit(dataGen.flow(X_train,y_train,
                                  batch_size=batchSizeVal),
                                 steps_per_epoch=stepsPerEpochVal,
@@ -157,3 +158,7 @@ plt.show()
 score = model.evaluate(X_test,y_test,verbose=0)
 print('Test Score = ',score[0])
 print('Test Accurancy = ',score[1])
+
+pickle_out = open("output/model_train.p","wb")
+pickle.dump(model,pickle_out)
+pickle_out.close()
